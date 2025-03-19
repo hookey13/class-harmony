@@ -1,0 +1,64 @@
+{
+  "short_name": "Class Harmony",
+  "name": "Class Harmony - Intelligent Class List Creation",
+  "description": "An intelligent class list creation system for schools",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1976d2",
+  "background_color": "#ffffff",
+  "orientation": "any",
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "View Classes",
+      "short_name": "Classes",
+      "description": "View and manage class lists",
+      "url": "/classes",
+      "icons": [{ "src": "/icons/classes.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Parent Portal",
+      "short_name": "Portal",
+      "description": "Access parent portal",
+      "url": "/parent",
+      "icons": [{ "src": "/icons/parent.png", "sizes": "192x192" }]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "/screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Dashboard view of Class Harmony"
+    },
+    {
+      "src": "/screenshots/class-list.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "Class list management interface"
+    }
+  ]
+} 

@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:5
+    restart: always
+    container_name: class-harmony-mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_INITDB_DATABASE=class_harmony
+    volumes:
+      - mongodb-data:/data/db
+    networks:
+      - app-network
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/class_harmony --quiet
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+
+  # Backend API service
+  backend:
+    build: ./server
+    container_name: class-harmony-backend
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@mongodb:27017/class_harmony?authSource=admin
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_EXPIRE=7d
+      - EMAIL_SERVICE=${EMAIL_SERVICE}
+      - EMAIL_USERNAME=${EMAIL_USERNAME}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - EMAIL_FROM=${EMAIL_FROM}
+      - CLIENT_URL=${CLIENT_URL}
+    networks:
+      - app-network
+    ports:
+      - "5000:5000"
+    volumes:
+      - backend-logs:/usr/src/app/logs
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
+
+  # Frontend client service  
+  frontend:
+    build: ./client
+    container_name: class-harmony-frontend
+    restart: always
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+    ports:
+      - "80:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongodb-data:
+  backend-logs: 
