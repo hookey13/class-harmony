@@ -112,24 +112,61 @@ function App() {
           <NotificationProvider>
             <ParentAuthProvider>
               <ParentNotificationProvider>
-                <Routes>
-                  <Route path="/" element={<LandingPage />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  
-                  {/* Protected routes */}
-                  <Route element={<RequireAuth />}>
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/students" element={<Students />} />
-                    <Route path="/students/:studentId" element={<StudentDetail />} />
-                    <Route path="/admin/class-optimization" element={<ClassOptimization />} />
-                    <Route path="/admin/analytics" element={<Analytics />} />
-                    <Route path="/admin/multi-year-analytics" element={<MultiYearAnalytics />} />
-                    <Route path="/admin/predictive-analytics" element={<PredictiveAnalytics />} />
-                    <Route path="/admin/data-import" element={<DataImport />} />
-                    <Route path="/admin/integrations" element={<Integrations />} />
-                  </Route>
-                </Routes>
+                <ErrorBoundary>
+                  <Routes>
+                    {/* Public routes */}
+                    <Route path="/" element={<LandingPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    
+                    {/* Protected routes */}
+                    <Route path="/dashboard" element={
+                      <RequireAuth>
+                        <Dashboard />
+                      </RequireAuth>
+                    } />
+                    <Route path="/students" element={
+                      <RequireAuth>
+                        <Students />
+                      </RequireAuth>
+                    } />
+                    <Route path="/students/:studentId" element={
+                      <RequireAuth>
+                        <StudentDetail />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/class-optimization" element={
+                      <RequireAuth>
+                        <ClassOptimization />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/analytics" element={
+                      <RequireAuth>
+                        <Analytics />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/multi-year-analytics" element={
+                      <RequireAuth>
+                        <MultiYearAnalytics />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/predictive-analytics" element={
+                      <RequireAuth>
+                        <PredictiveAnalytics />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/data-import" element={
+                      <RequireAuth>
+                        <DataImport />
+                      </RequireAuth>
+                    } />
+                    <Route path="/admin/integrations" element={
+                      <RequireAuth>
+                        <Integrations />
+                      </RequireAuth>
+                    } />
+                  </Routes>
+                </ErrorBoundary>
               </ParentNotificationProvider>
             </ParentAuthProvider>
           </NotificationProvider>
@@ -139,4 +176,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
