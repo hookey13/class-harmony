@@ -53,7 +53,8 @@ const Login = () => {
       try {
         setLoginError('');
         await login(values.email, values.password);
-        navigate('/');
+        // Changed the redirect to go to dashboard instead of home
+        navigate('/dashboard');
       } catch (error) {
         setLoginError(error.message || 'Login failed. Please check your credentials.');
       } finally {
@@ -246,4 +247,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;
