@@ -18,61 +18,65 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // For demo purposes, simulating a user
+  // For demo purposes, check if user is already logged in via localStorage
   useEffect(() => {
-    // In a real app, this would be an API call to validate the token
-    // const checkAuthStatus = async () => {
-    //   try {
-    //     const response = await api.get('/auth/status');
-    //     setCurrentUser(response.data.user);
-    //   } catch (err) {
-    //     setCurrentUser(null);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+    // Check if we have a stored user in localStorage
+    const storedUser = localStorage.getItem('currentUser');
     
-    // Simulate async call
-    setTimeout(() => {
-      // Mock user for development
-      const mockUser = {
-        id: 1,
-        name: 'Test User',
-        email: 'user@example.com',
-        role: 'teacher', // or 'admin', 'parent'
-        avatar: null
-      };
-      
-      setCurrentUser(mockUser);
-      setLoading(false);
-    }, 1000);
+    if (storedUser) {
+      try {
+        // Parse the stored user
+        const user = JSON.parse(storedUser);
+        setCurrentUser(user);
+      } catch (err) {
+        console.error('Error parsing stored user:', err);
+        localStorage.removeItem('currentUser');
+      }
+    }
+    
+    setLoading(false);
   }, []);
 
   // Login function
   const login = async (email, password) => {
     try {
       setError('');
-      // In a real app:
-      // const response = await api.post('/auth/login', { email, password });
-      // setCurrentUser(response.data.user);
       
-      // Mock for development:
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const mockUser = {
-            id: 1,
-            name: 'Test User',
-            email: email,
-            role: 'teacher', // or 'admin', 'parent'
-            avatar: null
-          };
-          
-          setCurrentUser(mockUser);
-          resolve(mockUser);
-        }, 1000);
-      });
+      // For demonstration purposes, check for principal credentials
+      if (email === 'principal@example.com' && password === 'password123') {
+        const mockUser = {
+          id: 1,
+          name: 'Principal User',
+          email: email,
+          role: 'admin',
+          avatar: null
+        };
+        
+        // Store user in localStorage for persistence
+        localStorage.setItem('currentUser', JSON.stringify(mockUser));
+        setCurrentUser(mockUser);
+        return mockUser;
+      }
+      
+      // Mock for other users (teacher login)
+      if (email.includes('teacher')) {
+        const mockUser = {
+          id: 2,
+          name: 'Teacher User',
+          email: email,
+          role: 'teacher',
+          avatar: null
+        };
+        
+        localStorage.setItem('currentUser', JSON.stringify(mockUser));
+        setCurrentUser(mockUser);
+        return mockUser;
+      }
+      
+      // If credentials don't match any mock user, throw error
+      throw new Error('Invalid credentials');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to log in');
+      setError(err.message || 'Failed to log in');
       throw err;
     }
   };
@@ -80,16 +84,10 @@ export function AuthProvider({ children }) {
   // Logout function
   const logout = async () => {
     try {
-      // In a real app:
-      // await api.post('/auth/logout');
-      
-      // Mock for development:
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          setCurrentUser(null);
-          resolve(true);
-        }, 500);
-      });
+      // Remove user from localStorage
+      localStorage.removeItem('currentUser');
+      setCurrentUser(null);
+      return true;
     } catch (err) {
       console.error('Logout error:', err);
       throw err;
@@ -149,6 +147,12 @@ export function AuthProvider({ children }) {
         setTimeout(() => {
           const updatedUser = { ...currentUser, ...userData };
           setCurrentUser(updatedUser);
+          
+          // Update the stored user
+          if (localStorage.getItem('currentUser')) {
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+          }
+          
           resolve(updatedUser);
         }, 1000);
       });
@@ -234,4 +238,4 @@ export function PrivateRoute({ children }) {
   
   return children;
 }
-*/ 
+*/
