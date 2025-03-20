@@ -1,21 +1,9 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "server.js",
-      "use": "@vercel/node",
-      "config": {
-        "buildCommand": "node scripts/seedMockData.js || echo 'Continuing build'"
-      }
-    }
+    { "src": "index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "server.js"
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
-} 
+    { "src": "/(.*)", "dest": "/index.js" }
+  ]
+}
